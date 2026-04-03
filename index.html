@@ -5,58 +5,72 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>文本对照页</title>
   <style>
-    /* ── CSS 变量 / 主题 ── */
+    /* ══ CSS 变量 / 主题 ══ */
     :root {
-      --bg:        #f0f2f5;
-      --panel-bg:  #ffffff;
-      --border:    #d0d7de;
-      --header-bg: #1f2937;
-      --header-fg: #f9fafb;
-      --label-bg:  #e5e7eb;
-      --label-fg:  #374151;
-      --text:      #1f2937;
-      --placeholder:#9ca3af;
+      --bg:           #f0f2f5;
+      --panel-bg:     #ffffff;
+      --border:       #d0d7de;
+      --header-bg:    #1f2937;
+      --header-fg:    #f9fafb;
+      --label-bg:     #e5e7eb;
+      --label-fg:     #374151;
+      --text:         #1f2937;
+      --placeholder:  #9ca3af;
       --scroll-thumb: #9ca3af;
       --scroll-track: #e5e7eb;
-      --divider:   #6b7280;
-      --btn-bg:    #3b82f6;
-      --btn-fg:    #ffffff;
-      --btn-hover: #2563eb;
-      --clear-bg:  #ef4444;
-      --clear-hover:#dc2626;
-      --copy-bg:   #10b981;
-      --copy-hover:#059669;
-      --shadow:    0 2px 8px rgba(0,0,0,.10);
-      --radius:    10px;
-      --font:      'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      --divider-col:  #6b7280;
+      --btn-bg:       #3b82f6;
+      --btn-fg:       #ffffff;
+      --btn-hover:    #2563eb;
+      --clear-bg:     #ef4444;
+      --clear-hover:  #dc2626;
+      --copy-bg:      #10b981;
+      --copy-hover:   #059669;
+      --shadow:       0 2px 8px rgba(0,0,0,.10);
+      --font:         'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+      --mono:         'Courier New',Courier,monospace;
+      --gutter-bg:    #f3f4f6;
+      --gutter-fg:    #9ca3af;
+      --gutter-w:     48px;
+      --row-even:     rgba(59,130,246,.05);
+      --row-odd:      transparent;
+      --row-hover:    rgba(59,130,246,.10);
+      --diff-add:     rgba(16,185,129,.15);
+      --diff-del:     rgba(239,68,68,.13);
+      --diff-border-add: #10b981;
+      --diff-border-del: #ef4444;
     }
-
     [data-theme="dark"] {
-      --bg:        #0f172a;
-      --panel-bg:  #1e293b;
-      --border:    #334155;
-      --header-bg: #0f172a;
-      --header-fg: #e2e8f0;
-      --label-bg:  #1e293b;
-      --label-fg:  #94a3b8;
-      --text:      #e2e8f0;
-      --placeholder:#475569;
-      --scroll-thumb:#475569;
-      --scroll-track:#1e293b;
-      --divider:   #475569;
-      --btn-bg:    #3b82f6;
-      --btn-fg:    #ffffff;
-      --btn-hover: #60a5fa;
-      --clear-bg:  #dc2626;
-      --clear-hover:#ef4444;
-      --copy-bg:   #059669;
-      --copy-hover:#10b981;
-      --shadow:    0 2px 12px rgba(0,0,0,.40);
+      --bg:           #0f172a;
+      --panel-bg:     #1e293b;
+      --border:       #334155;
+      --header-bg:    #0f172a;
+      --header-fg:    #e2e8f0;
+      --label-bg:     #1e293b;
+      --label-fg:     #94a3b8;
+      --text:         #e2e8f0;
+      --placeholder:  #475569;
+      --scroll-thumb: #475569;
+      --scroll-track: #1e293b;
+      --divider-col:  #475569;
+      --btn-bg:       #3b82f6;
+      --btn-fg:       #ffffff;
+      --btn-hover:    #60a5fa;
+      --clear-bg:     #dc2626;
+      --clear-hover:  #ef4444;
+      --copy-bg:      #059669;
+      --copy-hover:   #10b981;
+      --shadow:       0 2px 12px rgba(0,0,0,.40);
+      --gutter-bg:    #0f172a;
+      --gutter-fg:    #475569;
+      --row-even:     rgba(99,102,241,.06);
+      --row-odd:      transparent;
+      --row-hover:    rgba(99,102,241,.14);
+      --diff-add:     rgba(16,185,129,.18);
+      --diff-del:     rgba(239,68,68,.18);
     }
 
-    /* ── 重置 & 基础 ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html, body {
       height: 100%;
       font-family: var(--font);
@@ -65,291 +79,255 @@
       transition: background .3s, color .3s;
     }
 
-    /* ── 整体布局 ── */
-    .app {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
+    /* ══ 骨架 ══ */
+    .app { display: flex; flex-direction: column; height: 100vh; }
 
-    /* ── 顶部标题栏 ── */
+    /* ── 标题栏 ── */
     header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      height: 56px;
-      background: var(--header-bg);
-      color: var(--header-fg);
-      box-shadow: var(--shadow);
-      flex-shrink: 0;
-      z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; height: 54px;
+      background: var(--header-bg); color: var(--header-fg);
+      box-shadow: var(--shadow); flex-shrink: 0; z-index: 10;
     }
-
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo {
-      font-size: 22px;
-    }
-
-    header h1 {
-      font-size: 17px;
-      font-weight: 600;
-      letter-spacing: .5px;
-    }
-
-    /* ── 主题切换按钮 ── */
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .logo { font-size: 22px; }
+    header h1 { font-size: 17px; font-weight: 600; letter-spacing: .4px; }
     .theme-toggle {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      cursor: pointer;
-      background: rgba(255,255,255,.12);
-      border: 1px solid rgba(255,255,255,.2);
-      border-radius: 20px;
-      padding: 5px 14px;
-      color: var(--header-fg);
-      font-size: 13px;
-      font-family: var(--font);
+      display: flex; align-items: center; gap: 8px; cursor: pointer;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+      border-radius: 20px; padding: 5px 14px;
+      color: var(--header-fg); font-size: 13px; font-family: var(--font);
       transition: background .2s;
     }
-
     .theme-toggle:hover { background: rgba(255,255,255,.22); }
-
-    .theme-toggle .icon { font-size: 16px; }
 
     /* ── 工具栏 ── */
     .toolbar {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 20px;
-      background: var(--panel-bg);
-      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      padding: 8px 18px;
+      background: var(--panel-bg); border-bottom: 1px solid var(--border);
       flex-shrink: 0;
-      flex-wrap: wrap;
     }
-
-    .toolbar label {
-      font-size: 13px;
-      color: var(--label-fg);
+    .toolbar label { font-size: 13px; color: var(--label-fg); white-space: nowrap; }
+    .toolbar select {
+      font-size: 13px; background: var(--bg); color: var(--text);
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 3px 8px; cursor: pointer; outline: none;
     }
-
-    .toolbar select,
-    .toolbar input[type="range"] {
-      font-size: 13px;
-      background: var(--bg);
-      color: var(--text);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 3px 8px;
-      cursor: pointer;
-      outline: none;
-    }
-
     .toolbar select:focus { border-color: var(--btn-bg); }
+    .toolbar-sep { width: 1px; height: 22px; background: var(--border); margin: 0 2px; }
 
-    .toolbar-sep {
-      width: 1px;
-      height: 22px;
-      background: var(--border);
-      margin: 0 4px;
-    }
-
-    /* ── 通用按钮 ── */
+    /* ── 按钮 ── */
     .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 5px 14px;
-      border: none;
-      border-radius: 6px;
-      font-size: 13px;
-      font-family: var(--font);
-      cursor: pointer;
-      transition: background .2s, transform .1s;
-      white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 12px; border: none; border-radius: 6px;
+      font-size: 13px; font-family: var(--font); cursor: pointer;
+      transition: background .2s, transform .1s; white-space: nowrap;
     }
-
     .btn:active { transform: scale(.96); }
-
-    .btn-primary  { background: var(--btn-bg);   color: var(--btn-fg); }
-    .btn-primary:hover  { background: var(--btn-hover); }
-
-    .btn-danger   { background: var(--clear-bg);  color: #fff; }
-    .btn-danger:hover   { background: var(--clear-hover); }
-
-    .btn-success  { background: var(--copy-bg);   color: #fff; }
-    .btn-success:hover  { background: var(--copy-hover); }
-
+    .btn-primary { background: var(--btn-bg); color: var(--btn-fg); }
+    .btn-primary:hover { background: var(--btn-hover); }
+    .btn-danger  { background: var(--clear-bg); color: #fff; }
+    .btn-danger:hover { background: var(--clear-hover); }
+    .btn-success { background: var(--copy-bg);  color: #fff; }
+    .btn-success:hover { background: var(--copy-hover); }
     .btn-ghost {
-      background: transparent;
-      color: var(--label-fg);
+      background: transparent; color: var(--label-fg);
       border: 1px solid var(--border);
     }
     .btn-ghost:hover { background: var(--label-bg); }
+    .btn-ghost.active { background: var(--btn-bg); color: #fff; border-color: var(--btn-bg); }
 
-    /* ── 主内容区（左右两栏） ── */
-    .content {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-      gap: 0;
-    }
+    /* ══ 主区域 ══ */
+    .content { display: flex; flex: 1; overflow: hidden; }
 
-    /* ── 每个面板 ── */
+    /* ── 面板 ── */
     .panel {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      min-width: 0;
-      overflow: hidden;
+      display: flex; flex-direction: column;
+      flex: 1; min-width: 0; overflow: hidden;
     }
-
     .panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 16px;
-      background: var(--label-bg);
-      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 7px 14px;
+      background: var(--label-bg); border-bottom: 1px solid var(--border);
       flex-shrink: 0;
     }
-
-    .panel-title {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--label-fg);
-    }
-
-    .panel-title .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-    }
-
+    .panel-title { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--label-fg); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; }
     .panel-left  .dot { background: #3b82f6; }
     .panel-right .dot { background: #10b981; }
+    .char-count { font-size: 11px; color: var(--placeholder); }
 
-    .char-count {
-      font-size: 11px;
-      color: var(--placeholder);
-    }
+    /* ── 面板主体 ── */
+    .panel-body { display: flex; flex: 1; overflow: hidden; position: relative; }
 
-    /* ── 文本区 ── */
-    .panel-body {
-      flex: 1;
+    /* ══ 编辑模式 ══ */
+    .mode-edit { display: flex; flex: 1; overflow: hidden; }
+
+    /* ─ 行号槽 ─ */
+    .gutter {
+      width: var(--gutter-w);
+      flex-shrink: 0;
+      background: var(--gutter-bg);
+      border-right: 1px solid var(--border);
       overflow: hidden;
+      user-select: none;
       position: relative;
+    }
+    .gutter-inner {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      padding-top: 16px;
+      will-change: transform;
+    }
+    .gutter-line {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding-right: 10px;
+      font-size: 12px;
+      font-family: var(--mono);
+      color: var(--gutter-fg);
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     textarea {
-      width: 100%;
-      height: 100%;
-      resize: none;
-      border: none;
-      outline: none;
-      padding: 16px 18px;
-      font-size: 14px;
-      line-height: 1.75;
+      flex: 1; resize: none; border: none; outline: none;
+      padding: 16px 14px;
+      font-size: 14px; line-height: 1.75;
       font-family: var(--font);
-      background: var(--panel-bg);
-      color: var(--text);
-      overflow-y: auto;
+      background: var(--panel-bg); color: var(--text);
+      overflow-y: auto; overflow-x: auto;
       transition: background .3s, color .3s;
     }
-
     textarea::placeholder { color: var(--placeholder); }
+    textarea::-webkit-scrollbar { width: 7px; height: 7px; }
+    textarea::-webkit-scrollbar-track  { background: var(--scroll-track); }
+    textarea::-webkit-scrollbar-thumb  { background: var(--scroll-thumb); border-radius: 4px; }
+    textarea::-webkit-scrollbar-thumb:hover { background: var(--divider-col); }
 
-    /* 自定义滚动条 */
-    textarea::-webkit-scrollbar { width: 7px; }
-    textarea::-webkit-scrollbar-track { background: var(--scroll-track); }
-    textarea::-webkit-scrollbar-thumb {
-      background: var(--scroll-thumb);
-      border-radius: 4px;
-    }
-    textarea::-webkit-scrollbar-thumb:hover { background: var(--divider); }
-
-    /* ── 分隔线 ── */
-    .divider {
-      width: 6px;
-      background: var(--border);
-      cursor: col-resize;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: background .2s;
-      position: relative;
-    }
-
-    .divider::after {
-      content: '⠿';
-      color: var(--divider);
-      font-size: 14px;
-      writing-mode: vertical-lr;
+    /* ══ 镜像测量 div ══ */
+    .measure-mirror {
+      position: fixed;
+      top: -9999px; left: -9999px;
+      visibility: hidden;
       pointer-events: none;
+      overflow: hidden;
+      white-space: pre-wrap;
+      word-break: break-word;
+      height: auto;
     }
 
-    .divider:hover, .divider.dragging { background: var(--btn-bg); }
+    /* ══ 行对齐模式 ══ */
+    .mode-align { display: none; flex: 1; overflow: auto; flex-direction: column; }
+    .mode-align::-webkit-scrollbar { width: 7px; height: 7px; }
+    .mode-align::-webkit-scrollbar-track { background: var(--scroll-track); }
+    .mode-align::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 4px; }
+
+    .align-active .mode-edit  { display: none; }
+    .align-active .mode-align { display: flex; }
+
+    .align-table {
+      width: 100%; border-collapse: collapse;
+      font-size: 14px; font-family: var(--font); table-layout: fixed;
+    }
+    .align-table thead th {
+      position: sticky; top: 0; z-index: 2;
+      background: var(--label-bg); color: var(--label-fg);
+      font-weight: 600; font-size: 12px;
+      padding: 7px 0; border-bottom: 2px solid var(--border);
+    }
+    .align-table thead th:first-child { width: var(--gutter-w); border-right: 1px solid var(--border); }
+    .align-table thead th.col-left    { border-right: 1px solid var(--border); }
+
+    .align-table tbody tr { transition: background .15s; }
+    .align-table tbody tr:nth-child(even) { background: var(--row-even); }
+    .align-table tbody tr:nth-child(odd)  { background: var(--row-odd);  }
+    .align-table tbody tr:hover           { background: var(--row-hover); }
+
+    .align-table tbody tr.diff-changed   td.cell-left  { background: var(--diff-del); border-left: 3px solid var(--diff-border-del); }
+    .align-table tbody tr.diff-changed   td.cell-right { background: var(--diff-add); border-left: 3px solid var(--diff-border-add); }
+    .align-table tbody tr.diff-only-left  td.cell-left  { background: var(--diff-del); border-left: 3px solid var(--diff-border-del); }
+    .align-table tbody tr.diff-only-right td.cell-right { background: var(--diff-add); border-left: 3px solid var(--diff-border-add); }
+
+    .align-table td { vertical-align: top; padding: 0; border-bottom: 1px solid var(--border); }
+    td.cell-num {
+      width: var(--gutter-w); text-align: right;
+      font-size: 11px; font-family: var(--mono); color: var(--gutter-fg);
+      background: var(--gutter-bg); border-right: 1px solid var(--border);
+      padding: 5px 8px 5px 0; white-space: nowrap; user-select: none;
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       ★ 唯一修改处：
+         word-break: break-all  →  word-break: normal
+         新增 overflow-wrap: break-word
+       这样换行只在空格/连字符等单词边界处发生，
+       不会从英文单词中间截断。
+    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+    td.cell-left, td.cell-right {
+      padding: 4px 12px;
+      line-height: 1.75;
+      white-space: pre-wrap;
+      word-break: normal;           /* ← 改动：不在单词内部强制换行 */
+      overflow-wrap: break-word;    /* ← 改动：仅当单词本身超出列宽时才拆断 */
+      color: var(--text);
+    }
+    td.cell-left { border-right: 1px solid var(--border); }
+    td.cell-empty { color: var(--placeholder); font-style: italic; }
+
+    .diff-char-del { background: rgba(239,68,68,.35); border-radius: 2px; }
+    .diff-char-add { background: rgba(16,185,129,.35); border-radius: 2px; }
+
+    /* ── 分隔条 ── */
+    .v-divider {
+      width: 6px; background: var(--border); cursor: col-resize;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background .2s;
+    }
+    .v-divider::after {
+      content: '⠿'; color: var(--divider-col); font-size: 14px;
+      writing-mode: vertical-lr; pointer-events: none;
+    }
+    .v-divider:hover, .v-divider.dragging { background: var(--btn-bg); }
 
     /* ── 状态栏 ── */
     .statusbar {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 5px 20px;
-      font-size: 11px;
-      color: var(--placeholder);
-      background: var(--panel-bg);
-      border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+      padding: 4px 20px; font-size: 11px; color: var(--placeholder);
+      background: var(--panel-bg); border-top: 1px solid var(--border);
       flex-shrink: 0;
     }
-
     .statusbar span strong { color: var(--text); }
+    .legend { display: flex; align-items: center; gap: 10px; margin-left: auto; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 4px; font-size: 11px; }
+    .legend-dot  { width: 10px; height: 10px; border-radius: 3px; }
+    .ld-del { background: rgba(239,68,68,.4); }
+    .ld-add { background: rgba(16,185,129,.4); }
 
-    /* ── Toast 提示 ── */
+    /* ── Toast ── */
     .toast {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: #1f2937;
-      color: #f9fafb;
-      padding: 8px 20px;
-      border-radius: 8px;
-      font-size: 13px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .3s, transform .3s;
-      z-index: 9999;
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(16px);
+      background: #1f2937; color: #f9fafb;
+      padding: 8px 20px; border-radius: 8px;
+      font-size: 13px; opacity: 0; pointer-events: none;
+      transition: opacity .3s, transform .3s; z-index: 9999;
     }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* ── 响应式 ── */
     @media (max-width: 640px) {
-      .content { flex-direction: column; }
-      .divider  { width: 100%; height: 6px; cursor: row-resize; }
-      .divider::after { writing-mode: horizontal-tb; }
+      .content   { flex-direction: column; }
+      .v-divider { width: 100%; height: 6px; cursor: row-resize; }
+      .v-divider::after { writing-mode: horizontal-tb; }
     }
   </style>
 </head>
 <body>
-
 <div class="app" id="app">
 
-  <!-- ══ 顶部标题栏 ══ -->
+  <!-- ══ 标题栏 ══ -->
   <header>
     <div class="header-left">
       <span class="logo">📄</span>
@@ -363,8 +341,7 @@
 
   <!-- ══ 工具栏 ══ -->
   <div class="toolbar">
-    <!-- 字体大小 -->
-    <label for="fontSize">字号</label>
+    <label>字号</label>
     <select id="fontSize" onchange="applyFont()">
       <option value="12">12px</option>
       <option value="13">13px</option>
@@ -375,8 +352,7 @@
       <option value="20">20px</option>
     </select>
 
-    <!-- 字体家族 -->
-    <label for="fontFamily">字体</label>
+    <label>字体</label>
     <select id="fontFamily" onchange="applyFont()">
       <option value="'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif">默认</option>
       <option value="'Courier New',Courier,monospace">等宽</option>
@@ -384,8 +360,7 @@
       <option value="'Microsoft YaHei',sans-serif">微软雅黑</option>
     </select>
 
-    <!-- 行距 -->
-    <label for="lineH">行距</label>
+    <label>行距</label>
     <select id="lineH" onchange="applyFont()">
       <option value="1.5">1.5</option>
       <option value="1.75" selected>1.75</option>
@@ -395,69 +370,89 @@
 
     <div class="toolbar-sep"></div>
 
-    <!-- 同步滚动 -->
-    <button class="btn btn-ghost" id="syncBtn" onclick="toggleSync()">
-      🔗 同步滚动：关
-    </button>
+    <button class="btn btn-ghost active" id="lineNumBtn" onclick="toggleLineNum()">🔢 行号：开</button>
+    <button class="btn btn-ghost"        id="syncBtn"    onclick="toggleSync()">🔗 同步滚动：关</button>
+    <button class="btn btn-ghost active" id="alignBtn"   onclick="toggleAlign()">☰ 行对齐：开</button>
+
+    <label>对齐模式</label>
+    <select id="alignMode" onchange="renderAlign()">
+      <option value="line">逐行对齐</option>
+      <option value="diff">差异高亮</option>
+      <option value="char">字符级对比</option>
+    </select>
 
     <div class="toolbar-sep"></div>
 
-    <!-- 清空两侧 -->
-    <button class="btn btn-danger" onclick="clearAll()">🗑 清空全部</button>
-
-    <!-- 互换内容 -->
-    <button class="btn btn-ghost" onclick="swapContent()">⇄ 互换内容</button>
-
-    <!-- 复制左侧 -->
+    <button class="btn btn-danger"  onclick="clearAll()">🗑 清空全部</button>
+    <button class="btn btn-ghost"   onclick="swapContent()">⇄ 互换内容</button>
     <button class="btn btn-success" onclick="copyPanel('left')">📋 复制左侧</button>
-
-    <!-- 复制右侧 -->
     <button class="btn btn-success" onclick="copyPanel('right')">📋 复制右侧</button>
   </div>
 
   <!-- ══ 主内容区 ══ -->
   <div class="content" id="content">
 
-    <!-- 左面板 -->
+    <!-- ─ 左面板 ─ -->
     <div class="panel panel-left" id="panelLeft">
       <div class="panel-header">
-        <div class="panel-title">
-          <span class="dot"></span>
-          <span>左侧文本</span>
-        </div>
+        <div class="panel-title"><span class="dot"></span><span>左侧文本</span></div>
         <span class="char-count" id="countLeft">0 字符 · 0 行</span>
       </div>
-      <div class="panel-body">
-        <textarea
-          id="textLeft"
-          placeholder="在此粘贴或输入左侧文本…"
-          spellcheck="false"
-          oninput="updateCount('left')"
-          onscroll="handleScroll('left')"
-        ></textarea>
+      <div class="panel-body align-active" id="bodyLeft">
+
+        <div class="mode-edit" id="editLeft">
+          <div class="gutter" id="gutterLeft">
+            <div class="gutter-inner" id="gutterInnerLeft"></div>
+          </div>
+          <textarea
+            id="textLeft"
+            placeholder="在此粘贴或输入左侧文本…"
+            spellcheck="false"
+            oninput="onInput('left')"
+            onscroll="onScrollEdit('left')"
+            onkeydown="onKeydown(event,'left')"
+          ></textarea>
+        </div>
+
+        <div class="mode-align" id="alignLeft">
+          <table class="align-table" id="tableAlign">
+            <thead>
+              <tr>
+                <th></th>
+                <th class="col-left">左侧</th>
+                <th class="col-right">右侧</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyAlign"></tbody>
+          </table>
+        </div>
+
       </div>
     </div>
 
-    <!-- 可拖动分隔线 -->
-    <div class="divider" id="divider" onmousedown="startDrag(event)"></div>
+    <!-- ─ 分隔条 ─ -->
+    <div class="v-divider" id="vDivider" onmousedown="startDrag(event)"></div>
 
-    <!-- 右面板 -->
+    <!-- ─ 右面板 ─ -->
     <div class="panel panel-right" id="panelRight">
       <div class="panel-header">
-        <div class="panel-title">
-          <span class="dot"></span>
-          <span>右侧文本</span>
-        </div>
+        <div class="panel-title"><span class="dot"></span><span>右侧文本</span></div>
         <span class="char-count" id="countRight">0 字符 · 0 行</span>
       </div>
-      <div class="panel-body">
-        <textarea
-          id="textRight"
-          placeholder="在此粘贴或输入右侧文本…"
-          spellcheck="false"
-          oninput="updateCount('right')"
-          onscroll="handleScroll('right')"
-        ></textarea>
+      <div class="panel-body" id="bodyRight">
+        <div class="mode-edit" id="editRight">
+          <div class="gutter" id="gutterRight">
+            <div class="gutter-inner" id="gutterInnerRight"></div>
+          </div>
+          <textarea
+            id="textRight"
+            placeholder="在此粘贴或输入右侧文本…"
+            spellcheck="false"
+            oninput="onInput('right')"
+            onscroll="onScrollEdit('right')"
+            onkeydown="onKeydown(event,'right')"
+          ></textarea>
+        </div>
       </div>
     </div>
 
@@ -468,145 +463,404 @@
     <span>左侧：<strong id="statLeft">0 字符</strong></span>
     <span>右侧：<strong id="statRight">0 字符</strong></span>
     <span>差异：<strong id="statDiff">0 字符</strong></span>
+    <span>行数差：<strong id="statLineDiff">0 行</strong></span>
+    <div class="legend" id="legend">
+      <div class="legend-item"><div class="legend-dot ld-del"></div>左侧独有 / 已删除</div>
+      <div class="legend-item"><div class="legend-dot ld-add"></div>右侧独有 / 已新增</div>
+    </div>
   </div>
-
 </div>
+
+<!-- 测量镜像 div -->
+<div class="measure-mirror" id="mirrorLeft"></div>
+<div class="measure-mirror" id="mirrorRight"></div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
 <script>
-  /* ─── 主题切换 ─── */
-  let isDark = false;
+/* ══════════════════════════════════════════════════
+   全局状态
+══════════════════════════════════════════════════ */
+let isDark      = false;
+let showLineNum = true;
+let syncScroll  = false;
+let alignMode   = true;
+let scrollLock  = false;
 
-  function toggleTheme() {
-    isDark = !isDark;
-    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '');
-    document.getElementById('themeBtn').querySelector('.icon').textContent = isDark ? '☀️' : '🌙';
-    document.getElementById('themeLabel').textContent = isDark ? '亮色模式' : '暗色模式';
-  }
+/* ══════════════════════════════════════════════════
+   主题
+══════════════════════════════════════════════════ */
+function toggleTheme() {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '');
+  document.getElementById('themeBtn').querySelector('.icon').textContent = isDark ? '☀️' : '🌙';
+  document.getElementById('themeLabel').textContent = isDark ? '亮色模式' : '暗色模式';
+}
 
-  /* ─── 字体 / 字号 / 行距 ─── */
-  function applyFont() {
-    const size   = document.getElementById('fontSize').value + 'px';
-    const family = document.getElementById('fontFamily').value;
-    const lineH  = document.getElementById('lineH').value;
-    document.querySelectorAll('textarea').forEach(t => {
-      t.style.fontSize   = size;
-      t.style.fontFamily = family;
-      t.style.lineHeight = lineH;
+/* ══════════════════════════════════════════════════
+   字体 / 字号 / 行距
+══════════════════════════════════════════════════ */
+function applyFont() {
+  const size   = document.getElementById('fontSize').value + 'px';
+  const family = document.getElementById('fontFamily').value;
+  const lineH  = document.getElementById('lineH').value;
+
+  ['textLeft','textRight'].forEach(id => {
+    const ta = document.getElementById(id);
+    ta.style.fontSize   = size;
+    ta.style.fontFamily = family;
+    ta.style.lineHeight = lineH;
+  });
+
+  const tbl = document.getElementById('tableAlign');
+  if (tbl) {
+    tbl.style.fontSize   = size;
+    tbl.style.fontFamily = family;
+    tbl.querySelectorAll('td.cell-left,td.cell-right').forEach(td => {
+      td.style.lineHeight = lineH;
     });
   }
 
-  /* ─── 字符 & 行计数 ─── */
-  function updateCount(side) {
-    const ta   = document.getElementById(side === 'left' ? 'textLeft' : 'textRight');
-    const span = document.getElementById(side === 'left' ? 'countLeft' : 'countRight');
-    const stat = document.getElementById(side === 'left' ? 'statLeft'  : 'statRight');
-    const len  = ta.value.length;
-    const lines= ta.value === '' ? 0 : ta.value.split('\n').length;
-    span.textContent = `${len.toLocaleString()} 字符 · ${lines} 行`;
-    stat.textContent = `${len.toLocaleString()} 字符`;
-    updateDiff();
-  }
+  refreshGutters();
+}
 
-  function updateDiff() {
-    const l = document.getElementById('textLeft').value.length;
-    const r = document.getElementById('textRight').value.length;
-    document.getElementById('statDiff').textContent = `${Math.abs(l - r).toLocaleString()} 字符`;
-  }
+/* ══════════════════════════════════════════════════
+   镜像测量
+══════════════════════════════════════════════════ */
+function syncMirror(ta, mirror) {
+  const cs = getComputedStyle(ta);
+  const props = [
+    'fontSize','fontFamily','fontWeight','fontStyle',
+    'lineHeight','letterSpacing','wordSpacing',
+    'textTransform','textIndent',
+    'paddingTop','paddingRight','paddingBottom','paddingLeft',
+    'borderTopWidth','borderRightWidth','borderBottomWidth','borderLeftWidth',
+    'boxSizing','whiteSpace','wordBreak','overflowWrap','tabSize'
+  ];
+  props.forEach(p => { mirror.style[p] = cs[p]; });
 
-  /* ─── 同步滚动 ─── */
-  let syncScroll = false;
-  let scrolling  = false;
+  const contentW = ta.clientWidth
+    - parseFloat(cs.paddingLeft)
+    - parseFloat(cs.paddingRight);
+  mirror.style.width        = contentW + 'px';
+  mirror.style.padding      = '0';
+  mirror.style.border       = 'none';
+  mirror.style.whiteSpace   = 'pre-wrap';
+  mirror.style.wordBreak    = 'break-word';
+  mirror.style.overflowWrap = 'break-word';
+  mirror.style.height       = 'auto';
+}
 
-  function toggleSync() {
-    syncScroll = !syncScroll;
-    document.getElementById('syncBtn').textContent =
-      `🔗 同步滚动：${syncScroll ? '开' : '关'}`;
-  }
+function measureLineHeights(ta, mirror) {
+  syncMirror(ta, mirror);
+  const lines = ta.value.split('\n');
+  return lines.map(line => {
+    mirror.textContent = line === '' ? '\u200B' : line;
+    return mirror.scrollHeight;
+  });
+}
 
-  function handleScroll(from) {
-    if (!syncScroll || scrolling) return;
-    scrolling = true;
-    const src  = document.getElementById(from === 'left' ? 'textLeft'  : 'textRight');
-    const dest = document.getElementById(from === 'left' ? 'textRight' : 'textLeft');
-    const pct  = src.scrollTop / (src.scrollHeight - src.clientHeight || 1);
-    dest.scrollTop = pct * (dest.scrollHeight - dest.clientHeight);
-    requestAnimationFrame(() => { scrolling = false; });
-  }
+/* ══════════════════════════════════════════════════
+   行号渲染
+══════════════════════════════════════════════════ */
+function refreshGutter(side) {
+  const ta     = document.getElementById(side === 'left' ? 'textLeft'       : 'textRight');
+  const inner  = document.getElementById(side === 'left' ? 'gutterInnerLeft': 'gutterInnerRight');
+  const mirror = document.getElementById(side === 'left' ? 'mirrorLeft'     : 'mirrorRight');
 
-  /* ─── 清空 ─── */
-  function clearAll() {
-    if (!confirm('确定要清空两侧所有内容吗？')) return;
-    document.getElementById('textLeft').value  = '';
-    document.getElementById('textRight').value = '';
-    updateCount('left');
-    updateCount('right');
-    showToast('已清空全部内容');
-  }
+  if (!showLineNum) { inner.innerHTML = ''; return; }
 
-  /* ─── 互换 ─── */
-  function swapContent() {
-    const l = document.getElementById('textLeft');
-    const r = document.getElementById('textRight');
-    [l.value, r.value] = [r.value, l.value];
-    updateCount('left');
-    updateCount('right');
-    showToast('内容已互换');
-  }
+  const heights = measureLineHeights(ta, mirror);
+  inner.innerHTML = heights
+    .map((h, i) => `<span class="gutter-line" style="height:${h}px">${i + 1}</span>`)
+    .join('');
 
-  /* ─── 复制 ─── */
-  function copyPanel(side) {
-    const val = document.getElementById(side === 'left' ? 'textLeft' : 'textRight').value;
-    if (!val) { showToast('内容为空，无法复制'); return; }
-    navigator.clipboard.writeText(val)
-      .then(() => showToast(`${side === 'left' ? '左侧' : '右侧'}内容已复制`))
-      .catch(() => showToast('复制失败，请手动选中复制'));
-  }
+  syncGutterScroll(side);
+}
 
-  /* ─── Toast ─── */
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(t._timer);
-    t._timer = setTimeout(() => t.classList.remove('show'), 2200);
-  }
+function refreshGutters() {
+  refreshGutter('left');
+  refreshGutter('right');
+}
 
-  /* ─── 拖动分隔线 ─── */
-  let dragging = false;
+function syncGutterScroll(side) {
+  const ta    = document.getElementById(side === 'left' ? 'textLeft'       : 'textRight');
+  const inner = document.getElementById(side === 'left' ? 'gutterInnerLeft': 'gutterInnerRight');
+  inner.style.transform = `translateY(${-ta.scrollTop}px)`;
+}
 
-  function startDrag(e) {
-    dragging = true;
-    document.getElementById('divider').classList.add('dragging');
+/* ══════════════════════════════════════════════════
+   ResizeObserver
+══════════════════════════════════════════════════ */
+function setupResizeObserver(side) {
+  const ta = document.getElementById(side === 'left' ? 'textLeft' : 'textRight');
+  new ResizeObserver(() => refreshGutter(side)).observe(ta);
+}
+
+/* ══════════════════════════════════════════════════
+   输入处理
+══════════════════════════════════════════════════ */
+function onInput(side) {
+  updateCount(side);
+  refreshGutter(side);
+  if (alignMode) renderAlign();
+}
+
+function onKeydown(e, side) {
+  if (e.key === 'Tab') {
     e.preventDefault();
+    const ta = e.target;
+    const s  = ta.selectionStart;
+    const en = ta.selectionEnd;
+    ta.value = ta.value.substring(0, s) + '  ' + ta.value.substring(en);
+    ta.selectionStart = ta.selectionEnd = s + 2;
+    onInput(side);
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   滚动
+══════════════════════════════════════════════════ */
+function onScrollEdit(side) {
+  syncGutterScroll(side);
+  if (!syncScroll || scrollLock) return;
+  scrollLock = true;
+  const src  = document.getElementById(side === 'left' ? 'textLeft'  : 'textRight');
+  const dest = document.getElementById(side === 'left' ? 'textRight' : 'textLeft');
+  const pct  = src.scrollTop / (src.scrollHeight - src.clientHeight || 1);
+  dest.scrollTop = pct * (dest.scrollHeight - dest.clientHeight);
+  syncGutterScroll(side === 'left' ? 'right' : 'left');
+  requestAnimationFrame(() => { scrollLock = false; });
+}
+
+/* ══════════════════════════════════════════════════
+   字符统计
+══════════════════════════════════════════════════ */
+function updateCount(side) {
+  const ta   = document.getElementById(side === 'left' ? 'textLeft' : 'textRight');
+  const span = document.getElementById(side === 'left' ? 'countLeft': 'countRight');
+  const stat = document.getElementById(side === 'left' ? 'statLeft' : 'statRight');
+  const len  = ta.value.length;
+  const rows = ta.value === '' ? 0 : ta.value.split('\n').length;
+  span.textContent = `${len.toLocaleString()} 字符 · ${rows} 行`;
+  stat.textContent = `${len.toLocaleString()} 字符`;
+  updateDiff();
+}
+
+function updateDiff() {
+  const lv = document.getElementById('textLeft').value;
+  const rv = document.getElementById('textRight').value;
+  const ll = lv === '' ? 0 : lv.split('\n').length;
+  const rl = rv === '' ? 0 : rv.split('\n').length;
+  document.getElementById('statDiff').textContent     = `${Math.abs(lv.length - rv.length).toLocaleString()} 字符`;
+  document.getElementById('statLineDiff').textContent = `${Math.abs(ll - rl)} 行`;
+}
+
+/* ══════════════════════════════════════════════════
+   行号开关
+══════════════════════════════════════════════════ */
+function toggleLineNum() {
+  showLineNum = !showLineNum;
+  const btn = document.getElementById('lineNumBtn');
+  btn.textContent = `🔢 行号：${showLineNum ? '开' : '关'}`;
+  btn.classList.toggle('active', showLineNum);
+  ['gutterLeft','gutterRight'].forEach(id => {
+    document.getElementById(id).style.display = showLineNum ? '' : 'none';
+  });
+  if (alignMode) renderAlign();
+  else refreshGutters();
+}
+
+/* ══════════════════════════════════════════════════
+   同步滚动开关
+══════════════════════════════════════════════════ */
+function toggleSync() {
+  syncScroll = !syncScroll;
+  const btn = document.getElementById('syncBtn');
+  btn.textContent = `🔗 同步滚动：${syncScroll ? '开' : '关'}`;
+  btn.classList.toggle('active', syncScroll);
+}
+
+/* ══════════════════════════════════════════════════
+   行对齐开关
+══════════════════════════════════════════════════ */
+function toggleAlign() {
+  alignMode = !alignMode;
+  const btn = document.getElementById('alignBtn');
+  btn.textContent = `☰ 行对齐：${alignMode ? '开' : '关'}`;
+  btn.classList.toggle('active', alignMode);
+  document.getElementById('bodyLeft').classList.toggle('align-active', alignMode);
+  document.getElementById('panelRight').style.display = alignMode ? 'none' : '';
+  document.getElementById('vDivider').style.display   = alignMode ? 'none' : '';
+  document.getElementById('legend').style.display     = alignMode ? ''     : 'none';
+  if (alignMode) renderAlign();
+}
+
+/* ══════════════════════════════════════════════════
+   行对齐渲染
+══════════════════════════════════════════════════ */
+function renderAlign() {
+  const mode  = document.getElementById('alignMode').value;
+  const lText = document.getElementById('textLeft').value;
+  const rText = document.getElementById('textRight').value;
+  const lLines = lText === '' ? [] : lText.split('\n');
+  const rLines = rText === '' ? [] : rText.split('\n');
+  const maxLen = Math.max(lLines.length, rLines.length, 1);
+  const tbody  = document.getElementById('tbodyAlign');
+
+  let html = '';
+  for (let i = 0; i < maxLen; i++) {
+    const lVal = i < lLines.length ? lLines[i] : null;
+    const rVal = i < rLines.length ? rLines[i] : null;
+
+    let rowClass = '';
+    if (mode === 'diff' || mode === 'char') {
+      if      (lVal === null) rowClass = 'diff-only-right';
+      else if (rVal === null) rowClass = 'diff-only-left';
+      else if (lVal !== rVal) rowClass = 'diff-changed';
+    }
+
+    let lHtml, rHtml;
+    if (mode === 'char' && lVal !== null && rVal !== null && lVal !== rVal) {
+      lHtml = charDiff(lVal, rVal, 'del');
+      rHtml = charDiff(rVal, lVal, 'add');
+    } else {
+      lHtml = lVal !== null ? escHtml(lVal) : '<span class="cell-empty">（空）</span>';
+      rHtml = rVal !== null ? escHtml(rVal) : '<span class="cell-empty">（空）</span>';
+    }
+
+    const numCell = showLineNum ? `<td class="cell-num">${i + 1}</td>` : '';
+    html += `<tr class="${rowClass}">${numCell}<td class="cell-left">${lHtml}</td><td class="cell-right">${rHtml}</td></tr>`;
   }
 
-  document.addEventListener('mousemove', e => {
-    if (!dragging) return;
-    const content = document.getElementById('content');
-    const rect    = content.getBoundingClientRect();
-    const divW    = 6;
-    let   leftW   = e.clientX - rect.left - divW / 2;
-    const total   = rect.width - divW;
-    leftW = Math.max(total * 0.15, Math.min(total * 0.85, leftW));
-    const rightW  = total - leftW;
-    document.getElementById('panelLeft').style.flex  = 'none';
-    document.getElementById('panelLeft').style.width = leftW + 'px';
-    document.getElementById('panelRight').style.flex  = 'none';
-    document.getElementById('panelRight').style.width = rightW + 'px';
-  });
+  if (lLines.length === 0 && rLines.length === 0) {
+    html = `<tr><td colspan="3" style="padding:24px;text-align:center;color:var(--placeholder)">请在左侧或右侧输入文本</td></tr>`;
+  }
 
-  document.addEventListener('mouseup', () => {
-    if (!dragging) return;
-    dragging = false;
-    document.getElementById('divider').classList.remove('dragging');
-  });
+  tbody.innerHTML = html;
+}
 
-  /* ─── 初始化 ─── */
+/* ══════════════════════════════════════════════════
+   字符级 diff（LCS）
+══════════════════════════════════════════════════ */
+function charDiff(src, ref, type) {
+  if (src === ref) return escHtml(src);
+  const cls = type === 'del' ? 'diff-char-del' : 'diff-char-add';
+  const a = [...src], b = [...ref];
+  const m = a.length, n = b.length;
+  const dp = Array.from({length: m + 1}, () => new Uint16Array(n + 1));
+  for (let i = 1; i <= m; i++)
+    for (let j = 1; j <= n; j++)
+      dp[i][j] = a[i-1] === b[j-1] ? dp[i-1][j-1] + 1 : Math.max(dp[i-1][j], dp[i][j-1]);
+
+  const inLCS = new Array(m).fill(false);
+  let i = m, j = n;
+  while (i > 0 && j > 0) {
+    if (a[i-1] === b[j-1]) { inLCS[i-1] = true; i--; j--; }
+    else if (dp[i-1][j] >= dp[i][j-1]) i--;
+    else j--;
+  }
+
+  let result = '', inSpan = false;
+  for (let k = 0; k < a.length; k++) {
+    if (!inLCS[k]) {
+      if (!inSpan) { result += `<span class="${cls}">`; inSpan = true; }
+      result += escHtml(a[k]);
+    } else {
+      if (inSpan) { result += '</span>'; inSpan = false; }
+      result += escHtml(a[k]);
+    }
+  }
+  if (inSpan) result += '</span>';
+  return result;
+}
+
+function escHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+/* ══════════════════════════════════════════════════
+   清空 / 互换 / 复制
+══════════════════════════════════════════════════ */
+function clearAll() {
+  if (!confirm('确定要清空两侧所有内容吗？')) return;
+  ['textLeft','textRight'].forEach(id => { document.getElementById(id).value = ''; });
+  updateCount('left'); updateCount('right');
+  refreshGutters();
+  if (alignMode) renderAlign();
+  showToast('已清空全部内容');
+}
+
+function swapContent() {
+  const l = document.getElementById('textLeft');
+  const r = document.getElementById('textRight');
+  [l.value, r.value] = [r.value, l.value];
+  updateCount('left'); updateCount('right');
+  refreshGutters();
+  if (alignMode) renderAlign();
+  showToast('内容已互换');
+}
+
+function copyPanel(side) {
+  const val = document.getElementById(side === 'left' ? 'textLeft' : 'textRight').value;
+  if (!val) { showToast('内容为空，无法复制'); return; }
+  navigator.clipboard.writeText(val)
+    .then(() => showToast(`${side === 'left' ? '左侧' : '右侧'}内容已复制`))
+    .catch(()  => showToast('复制失败，请手动选中复制'));
+}
+
+/* ══════════════════════════════════════════════════
+   拖动分隔条
+══════════════════════════════════════════════════ */
+let dragging = false;
+function startDrag(e) {
+  dragging = true;
+  document.getElementById('vDivider').classList.add('dragging');
+  e.preventDefault();
+}
+document.addEventListener('mousemove', e => {
+  if (!dragging) return;
+  const content = document.getElementById('content');
+  const rect    = content.getBoundingClientRect();
+  const divW    = 6;
+  let   leftW   = e.clientX - rect.left - divW / 2;
+  const total   = rect.width - divW;
+  leftW = Math.max(total * 0.15, Math.min(total * 0.85, leftW));
+  document.getElementById('panelLeft').style.cssText  = `flex:none;width:${leftW}px`;
+  document.getElementById('panelRight').style.cssText = `flex:none;width:${total - leftW}px`;
+  refreshGutters();
+});
+document.addEventListener('mouseup', () => {
+  if (!dragging) return;
+  dragging = false;
+  document.getElementById('vDivider').classList.remove('dragging');
+});
+
+/* ══════════════════════════════════════════════════
+   Toast
+══════════════════════════════════════════════════ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* ══════════════════════════════════════════════════
+   初始化
+══════════════════════════════════════════════════ */
+(function init() {
   updateCount('left');
   updateCount('right');
+  setupResizeObserver('left');
+  setupResizeObserver('right');
+  toggleAlign();
+})();
 </script>
 </body>
 </html>
