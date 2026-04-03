@@ -482,7 +482,7 @@
 /* ══════════════════════════════════════════════════
    全局状态
 ══════════════════════════════════════════════════ */
-let isDark      = false;
+let isDark      = true;
 let showLineNum = true;
 let syncScroll  = false;
 let alignMode   = true;
@@ -855,6 +855,11 @@ function showToast(msg) {
    初始化
 ══════════════════════════════════════════════════ */
 (function init() {
+  // 默认暗色
+  document.documentElement.setAttribute('data-theme', 'dark');
+  document.getElementById('themeBtn').querySelector('.icon').textContent = '☀️';
+  document.getElementById('themeLabel').textContent = '亮色模式';
+
   updateCount('left');
   updateCount('right');
   setupResizeObserver('left');
