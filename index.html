@@ -385,6 +385,7 @@
 
     <button class="btn btn-danger"  onclick="clearAll()">🗑 清空全部</button>
     <button class="btn btn-ghost"   onclick="swapContent()">⇄ 互换内容</button>
+    <button class="btn btn-ghost" onclick="removeEmptyLines()">✂️ 去除空行</button>
     <button class="btn btn-success" onclick="copyPanel('left')">📋 复制左侧</button>
     <button class="btn btn-success" onclick="copyPanel('right')">📋 复制右侧</button>
   </div>
@@ -784,7 +785,7 @@ function escHtml(str) {
 }
 
 /* ══════════════════════════════════════════════════
-   清空 / 互换 / 复制
+   清空 / 互换 / 移除空行 / 复制
 ══════════════════════════════════════════════════ */
 function clearAll() {
   if (!confirm('确定要清空两侧所有内容吗？')) return;
@@ -803,6 +804,22 @@ function swapContent() {
   refreshGutters();
   if (alignMode) renderAlign();
   showToast('内容已互换');
+}
+
+function removeEmptyLines() {
+  ['textLeft', 'textRight'].forEach(id => {
+    const ta = document.getElementById(id);
+    if (!ta.value) return;
+    ta.value = ta.value
+      .split('\n')
+      .filter(line => line.trim() !== '')
+      .join('\n');
+  });
+  updateCount('left');
+  updateCount('right');
+  refreshGutters();
+  if (alignMode) renderAlign();
+  showToast('已去除两栏空行');
 }
 
 function copyPanel(side) {
